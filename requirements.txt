@@ -2,3 +2,8 @@ fastapi
 uvicorn
 pydantic
 python-dotenv
+pandas
+openpyxl
+xlrd
+PyMuPDF
+SQLAlchemy
