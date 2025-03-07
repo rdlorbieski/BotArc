@@ -1,23 +1,11 @@
-from fastapi import FastAPI
-app = FastAPI()
+from Configs.config import Config
+from dotenv import load_dotenv
+import os
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+load_dotenv()
+gpt_key = os.getenv("GPT_KEY")
 
+gpt_config = Config(gpt_key=gpt_key)
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
-
-
-@app.get("/status")
-def status():
-    return {"message": "API funcionando"}
-
-
-# @app.post("/process-message/")
-# def process_message(message: str):
-#     agent = SpecialistAgent("suporte ao cliente")
-#     response = agent.process_message(message)
-#     return {"response": response}
+print(gpt_config.gpt_key)
+print("oi")
