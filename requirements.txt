@@ -8,3 +8,5 @@ xlrd
 PyMuPDF
 SQLAlchemy
 requests
+chainlit
+sympy
