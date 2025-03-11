@@ -1,5 +1,11 @@
 import sys
 import os
+
+from bots.PdfSubjectBot import PdfSubjectBot
+from data_connector.PdfConnector import PdfConnector
+from normalizer.DataframeCleaner import DataframeCleaner
+from normalizer.TextCleaner import TextCleaner
+
 # Adiciona o diretório raiz ao sys.path para encontrar os módulos corretamente
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -17,9 +23,11 @@ configs = Config(
     pdf_path=os.getenv("PDF_FILE_PATH")
 )
 
+pdf_connector = PdfConnector(configs.pdf_path)
+pre_processor = TextCleaner()
 # Inicializa o bot base
-#bot = PdfSubjectBot(configs)
-bot = EquationOptimizerBot(configs)
+bot = PdfSubjectBot(configs, pdf_connector, pre_processor)
+#bot = EquationOptimizerBot(configs)
 
 @cl.on_message
 async def handle_message(message: cl.Message):

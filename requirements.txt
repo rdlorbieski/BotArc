@@ -10,3 +10,4 @@ SQLAlchemy
 requests
 chainlit
 sympy
+asyncpg

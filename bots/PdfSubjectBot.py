@@ -3,13 +3,12 @@ from data_connector.PdfConnector import PdfConnector
 from apis.OpenAIClient import OpenAIClient
 
 class PdfSubjectBot(BaseBot):
-    def __init__(self, config):
+    def __init__(self, config, connector, pre_processor=None):
         """Inicializa o bot especializado em responder com base em um PDF."""
         super().__init__(config, bot_name="PdfSubjectBot", bot_type="pdf_analysis", max_history=5)
-        self.pdf_connector = PdfConnector(config.pdf_path)
+        self.pdf_connector = connector
+        self.pre_processor = pre_processor  # Define o pre_processor antes de chamar load_pdf
         self.openai_client = OpenAIClient(api_key=config.gpt_key, model="gpt-4o")
-
-        # Conectar ao PDF e armazenar o conteúdo
         self.pdf_text = self.load_pdf()
 
     def load_pdf(self):
@@ -17,6 +16,9 @@ class PdfSubjectBot(BaseBot):
         try:
             self.pdf_connector.connect()
             pdf_text = self.pdf_connector.read_data()
+            if self.pre_processor:
+                print("Usando pre_processor para limpar o texto do PDF.")
+                pdf_text = self.pre_processor.clean(pdf_text)  # Usa o pre_processor se estiver definido
             self.pdf_connector.disconnect()
             return pdf_text if pdf_text.strip() else "O PDF está vazio ou não contém texto extraível."
         except Exception as e:

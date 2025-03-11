@@ -5,7 +5,7 @@ class Config:
 
         :param pdf_path: Caminho do arquivo PDF.
         :param gpt_key: Chave da API do OpenAI.
-        :param google_key: Chave da API do Google.
+        :param google_key: Chave da API do Googlep.
         """
         if not gpt_key:
             raise ValueError("A chave 'gpt_key' é obrigatória e não foi fornecida.")
