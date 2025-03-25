@@ -11,3 +11,4 @@ requests
 chainlit
 sympy
 asyncpg
+openai

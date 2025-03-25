@@ -1,8 +1,18 @@
+from openai import OpenAI
 import requests
 import os
 from dotenv import load_dotenv
-
+from pydantic import BaseModel
 load_dotenv()
+
+# Exemplo de modelo estruturado utilizando Pydantic
+class CalendarEvent(BaseModel):
+    name: str
+    date: str
+    participants: list[str]
+
+    def __str__(self):
+        return f"Evento: {self.name}, Data: {self.date}, Participantes: {', '.join(self.participants)}"
 
 
 class OpenAIClient:
@@ -61,9 +71,36 @@ class OpenAIClient:
         else:
             return f"Erro {response.status_code}: {response.json()}"
 
+    def send_request_structured_format(self, role_system, role_user, response_format, model):
+        if model is None:
+            model = self.model
+
+        client = OpenAI(api_key=self.api_key)
+        completion = client.beta.chat.completions.parse(
+            model=model,
+            messages=[
+                {"role": "system", "content": role_system},
+                {"role": "user", "content": role_user},
+            ],
+            response_format=response_format,
+        )
+
+        event = completion.choices[0].message.parsed
+        return event
 
 
-# api_key = os.getenv("GPT_KEY")
-# client = OpenAIClient(api_key=api_key, model="gpt-4o")
-# resposta = client.send_request(prompt="Explique o funcionamento de um transformador de sentenças.")
-# print(resposta)
+
+api_key = os.getenv("GPT_KEY")
+openai_client = OpenAIClient(api_key=api_key, model="gpt-4o")
+
+ce = openai_client.send_request_structured_format(
+    role_system="Extract the event information.",
+    role_user="Alice and Bob are going to a science fair on Friday.",
+    response_format=CalendarEvent,
+    model="gpt-4o-2024-08-06"
+    )
+print(ce)
+
+resultado = openai_client.send_request("Porque 2 elevado a 3 é 8?")
+print(resultado)
+
