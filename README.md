@@ -1,4 +1,4 @@
 # BotArc
 
 Para rodar a api: \
-uvicorn main:app --reload
+uvicorn main_api:app --reload
