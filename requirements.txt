@@ -12,3 +12,4 @@ chainlit
 sympy
 asyncpg
 openai
+google-generativeai
